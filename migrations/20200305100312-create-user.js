@@ -9,8 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       email: {
-        type: Sequelize.STRING,
-        type: unique
+        type: Sequelize.STRING
       },
       password: {
         type: Sequelize.STRING
