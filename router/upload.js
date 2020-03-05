@@ -4,6 +4,8 @@ const restler = require('restler');
 const multer = require('multer');
 const bufferToBase64 = require('base64-arraybuffer');
 
+const { Photo } = require('../models/index');
+
 const upload = multer({
     limits: {
         fileSize: 4 * 1024 * 1024,
@@ -22,13 +24,27 @@ router.post("/upload", upload.single(HTMLInputFileName), (req, res) => {
             }
         }).on('complete', function(data, response) {
             let imgURL = data.data.url;
-            let deleteURL = data.delete_url;
+            // let deleteURL = data.delete_url;
             let message = "Image uploaded";
-            res.status(201).json({
-                imgURL,
-                deleteURL,
-                message
+            // res.status(201).json({
+            //     imgURL,
+            //     deleteURL,
+            //     message
+            // })
+            Photo.update({
+                link: imgURL
+            }, {
+                where: {
+                    id: req.activeUser.id
+                }
             })
+            .then(result => {
+                res.status(201).json({
+                    message: message
+                })
+            })
+            .catch(next);
+
         }).on('fail', function(data, response) {
             let err = new Error();
             err.code = 400;
