@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "postgres",
-    "password": "lostsaga206",
+    "password": "postgres",
     "database": "InstaMood",
     "host": "127.0.0.1",
     "dialect": "postgres",
