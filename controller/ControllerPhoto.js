@@ -2,6 +2,7 @@ const  { Photo } = require('../models')
 const restler = require('restler');
 const bufferToBase64 = require('base64-arraybuffer');
 const googleVision = require('../helper/googleVision')
+const foodRecommendation = require('../helper/zomato')
 
 class ControllerPhoto {
   static findAll(req, res, next) {
@@ -72,36 +73,55 @@ class ControllerPhoto {
             }
         }).on('complete', function(data, response) {
             let imgURL = data.data.url;
-            // let deleteURL = data.delete_url;
             let mood = ''
             console.log(imgURL);
             googleVision(imgURL)
               .then(result => {
                 mood = result;
-                console.log(result);
+                
+                const container = []
+                foodRecommendation(result)
+                .then(recommendation => {
+                  if(recommendation.data.restaurants){
+                    
+                    for(let i = 0 ; i < 3 ; i++){
+                        const obj = {
+                          "name": recommendation.data.restaurants[i].restaurant.name,
+                          "thumb": recommendation.data.restaurants[i].restaurant.thumb
+                        }
+                          container.push(obj)
+                        }
+                      }else{
+                        let msg = {
+                          msg : 'Data not found'
+                        }
+                        next(msg)
+                      }
+
+                    Photo.create({
+                      link: imgURL,
+                      description: mood,
+                      UserId: req.userId 
+      
+                    })
+                    .then(result => {
+                        res.status(201).json({
+                            container
+                        })
+                    })
+                    .catch(next);
+                  })
+                  .catch(err => {
+                    next(err)
+                    
+                  })
               })
               .catch(err => {
-                console.log(err);
+                next(err)
               })
-            let message = "Image uploaded";
-            // res.status(201).json({
-            //     imgURL
-            //     deleteURL,
-            //     message
-            // })
-            console.log(imgURL)
-            Photo.create({
-                link: imgURL,
-                description: mood,
-                UserId: req.userId 
 
-            })
-            .then(result => {
-                res.status(201).json({
-                    message: message
-                })
-            })
-            .catch(next);
+            console.log(imgURL)
+            
 
         }).on('fail', function(data, response) {
             let err = new Error();

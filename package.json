@@ -20,6 +20,7 @@
   "homepage": "https://github.com/InstaMood/Server#readme",
   "dependencies": {
     "@google-cloud/vision": "^1.10.0",
+    "axios": "^0.19.2",
     "base64-arraybuffer": "^0.2.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -33,6 +34,7 @@
     "npm": "^6.14.2",
     "pg": "^7.18.2",
     "restler": "^3.4.0",
-    "sequelize": "^5.21.5"
+    "sequelize": "^5.21.5",
+    "zomato.js": "^1.1.0"
   }
 }
