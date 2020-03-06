@@ -33,7 +33,7 @@ const googleVision = async (link) => {
       return 'No face detected'
     }
   } catch (err) {
-    console.log(err);
+    return err
   }
 }
 
@@ -58,7 +58,6 @@ const joyCounter = (arr) => {
     VERY_LIKELY: 0,
   }
   arr.forEach(el => {
-    // Hitung joyLikelihod
     switch (el.joyLikelihood) {
       case 'VERY_LIKELY':
         counter.VERY_LIKELY++;
@@ -91,7 +90,6 @@ const sorrowCounter = (arr) => {
     VERY_LIKELY: 0,
   }
   arr.forEach(el => {
-    // Hitung joyLikelihod
     switch (el.sorrowLikelihood) {
       case 'VERY_LIKELY':
         counter.VERY_LIKELY++;
@@ -124,7 +122,6 @@ const angerCounter = (arr) => {
     VERY_LIKELY: 0,
   }
   arr.forEach(el => {
-    // Hitung joyLikelihod
     switch (el.angerLikelihood) {
       case 'VERY_LIKELY':
         counter.VERY_LIKELY++;
@@ -157,7 +154,6 @@ const surpriseCounter = (arr) => {
     VERY_LIKELY: 0,
   }
   arr.forEach(el => {
-    // Hitung joyLikelihod
     switch (el.surpriseLikelihood) {
       case 'VERY_LIKELY':
         counter.VERY_LIKELY++;
