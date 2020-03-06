@@ -80,40 +80,50 @@ class ControllerPhoto {
                 mood = result;
                 
                 const container = []
+                console.log(result);
+                if(result === 'Wajah kurang jelas' || result === 'No face detected'){
+                  throw new Error('No face detected')
+                }
+                
                 foodRecommendation(result)
                 .then(recommendation => {
                   if(recommendation.data.restaurants){
-                    
                     for(let i = 0 ; i < 3 ; i++){
                         const obj = {
                           "name": recommendation.data.restaurants[i].restaurant.name,
                           "thumb": recommendation.data.restaurants[i].restaurant.thumb
                         }
                           container.push(obj)
-                        }
-                      }else{
-                        let msg = {
-                          msg : 'Data not found'
-                        }
-                        next(msg)
                       }
+                  }else{
+                    let msg = {
+                      msg : 'Data not found'
+                    }
+                    // next(msg)
+                    throw(msg)
+                  }
 
                     Photo.create({
                       link: imgURL,
                       description: mood,
+                      mood: mood,
+                      recommendFood: container,
                       UserId: req.userId 
       
                     })
                     .then(result => {
+                      console.log(container);
+                      
                         res.status(201).json({
                             container
                         })
                     })
-                    .catch(next);
+                    .catch(err => {
+                      next(err)
+                    });
                   })
                   .catch(err => {
                     next(err)
-                    
                   })
               })
               .catch(err => {
