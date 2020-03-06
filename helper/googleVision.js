@@ -20,7 +20,6 @@ const googleVision = async (link) => {
           let sorted = Object.entries(el).sort((a,b) => a[1] - b[1]);
           result.push(sorted[sorted.length - 1][0])
         });
-
         if (result[0] === 'VERY_LIKELY' || 'LIKELY') return 'joy'
         if (result[1] === 'VERY_LIKELY' || 'LIKELY') return 'sorrow';
         if (result[2] === 'VERY_LIKELY' || 'LIKELY') return 'anger';

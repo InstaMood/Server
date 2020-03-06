@@ -73,6 +73,16 @@ class ControllerPhoto {
         }).on('complete', function(data, response) {
             let imgURL = data.data.url;
             // let deleteURL = data.delete_url;
+            let mood = ''
+            console.log(imgURL);
+            googleVision(imgURL)
+              .then(result => {
+                mood = result;
+                console.log(result);
+              })
+              .catch(err => {
+                console.log(err);
+              })
             let message = "Image uploaded";
             // res.status(201).json({
             //     imgURL
@@ -82,7 +92,7 @@ class ControllerPhoto {
             console.log(imgURL)
             Photo.create({
                 link: imgURL,
-                description,
+                description: mood,
                 UserId: req.userId 
 
             })
