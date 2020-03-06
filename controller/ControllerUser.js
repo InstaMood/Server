@@ -65,6 +65,7 @@ class UserController {
         }
       })
       .catch(err => {
+        console.log(err)
         next(err)
       })
   }
@@ -89,10 +90,8 @@ class UserController {
           return data
         }else{
           return User.create({
-            where: {
               email: data.email,
               password: process.env.PASSWORD_GOOGLE
-            }
           })
         }
       })
