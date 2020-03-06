@@ -18,6 +18,16 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Please insert Description"
+        }
+      }
+    },
     mood: {
       type: DataTypes.STRING
     },

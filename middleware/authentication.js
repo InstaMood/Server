@@ -1,28 +1,24 @@
-'use strict'
-
-const jwt  = require('jsonwebtoken');
+const jwt  = require('../helper/jwt');
 const { User } = require('../models')
 
 module.exports = function(req, res, next){
     
     try {
-        console.log(req);
-        
         const access_token = req.headers.access_token
         
-        const decoded_token = jwt.verify(access_token, process.env.SECRET);
-        const {id, email} = decoded_token.id
+        const decoded_token = jwt.vertifyToken(access_token);
+        console.log(decoded_token)
+        const {id, email} = decoded_token.token
         
         User.findOne({
             where: {
-                id,
                 email
             }
         })
         .then((result) => {
             
             if(result){
-                req.headers.userId = id
+                req.userId = id
                 next()
                 return null
             }else{
@@ -33,7 +29,8 @@ module.exports = function(req, res, next){
                 throw error
             }
         }).catch((err) => {
-            res.status(err.status).json({"Error message":err.message})
+            console.log(err)
+            next(err)
         });
 
     } catch (error) {
@@ -43,6 +40,4 @@ module.exports = function(req, res, next){
         }
         res.status(err.status).json({"Error message":err.message})
     }
-    
-    
 }
