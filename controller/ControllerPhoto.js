@@ -4,6 +4,7 @@ const bufferToBase64 = require('base64-arraybuffer');
 const googleVision = require('../helper/googleVision')
 const foodRecommendation = require('../helper/zomato')
 
+
 class ControllerPhoto {
   static findAll(req, res, next) {
     Photo.findAll() 
