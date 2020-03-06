@@ -15,6 +15,7 @@ const upload = multer({
 const HTMLInputFileName = 'upload';
 
 router.post("/upload", upload.single(HTMLInputFileName), (req, res) => {
+    const { description } = req.body
     let base64String = bufferToBase64.encode(req.file.buffer);
     restler.post('https://api.imgbb.com/1/upload', {
             multipart: true,
@@ -27,15 +28,17 @@ router.post("/upload", upload.single(HTMLInputFileName), (req, res) => {
             // let deleteURL = data.delete_url;
             let message = "Image uploaded";
             // res.status(201).json({
-            //     imgURL,
+            //     imgURL
             //     deleteURL,
             //     message
             // })
             Photo.update({
-                link: imgURL
+                link: imgURL,
+                description
+
             }, {
                 where: {
-                    id: req.activeUser.id
+                    id: req.userId
                 }
             })
             .then(result => {

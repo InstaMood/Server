@@ -1,4 +1,7 @@
 const  { Photo } = require('../models')
+const restler = require('restler');
+const bufferToBase64 = require('base64-arraybuffer');
+const googleVision = require('../helper/googleVision')
 
 class ControllerPhoto {
   static findAll(req, res, next) {
@@ -59,18 +62,48 @@ class ControllerPhoto {
       })
   }
   static create(req, res, next) {
-    const { link, description } =req.body
-    Photo.create({
-      link,
-      description,
-      UserId: req.userId
-    })
-      .then(data => {
-        res.status(200).json(data)
-      })
-      .catch(err => {
-        next(err)
-      })
+    const { description } = req.body
+    let base64String = bufferToBase64.encode(req.file.buffer);
+    restler.post('https://api.imgbb.com/1/upload', {
+            multipart: true,
+            data: {
+                'key': 'e9061d427dc893cca88401e5c9628dd9',
+                'image': base64String
+            }
+        }).on('complete', function(data, response) {
+            let imgURL = data.data.url;
+            // let deleteURL = data.delete_url;
+            let message = "Image uploaded";
+            // res.status(201).json({
+            //     imgURL
+            //     deleteURL,
+            //     message
+            // })
+            console.log(imgURL)
+            Photo.create({
+                link: imgURL,
+                description,
+                UserId: req.userId 
+
+            })
+            .then(result => {
+                res.status(201).json({
+                    message: message
+                })
+            })
+            .catch(next);
+
+        }).on('fail', function(data, response) {
+            let err = new Error();
+            err.code = 400;
+            err.message = 'Fail to upload';
+            throw err;
+        }).on('error', function(err, response) {
+            err = new Error();
+            err.code = 500;
+            err.message = 'Internal Server Error';
+            throw err;
+        });
   }
   static findOne(req, res, next) {
     const  { id } =  req.params
