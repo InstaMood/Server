@@ -40,6 +40,4 @@ module.exports = function(req, res, next){
         }
         res.status(err.status).json({"Error message":err.message})
     }
-    
-    
 }
