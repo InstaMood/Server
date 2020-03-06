@@ -69,7 +69,7 @@ class UserController {
       })
   }
   static loginGoogle (req, res, next) {
-    const data = ''
+    let data = ''
     client.verifyIdToken(
       {
         idToken: req.headers.token,

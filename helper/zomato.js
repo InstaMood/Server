@@ -49,12 +49,13 @@ function foodRecom ( mood ) {
         case 'Wajah kurang jelas':
             return new Promise(function(resolve, reject) {
                 // executor (the producing code, "singer")
-                reject({'msg':'no face detected'})
+                reject('No face detected')
+                // throw({'msg':'no face detected'})
               });
         case 'No face detected':
             return new Promise(function(resolve, reject) {
                 // executor (the producing code, "singer")
-                reject({'msg':'Please upload picture with your face'})
+                reject('No face detected')
               });
         default:
             break;
